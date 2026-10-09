@@ -1,4 +1,4 @@
-import { Alert, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, FlatList, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
@@ -28,10 +28,19 @@ export default function CartScreen() {
     const state = useCartStore.getState();
     const unique = selectCartUniqueCount(state);
     const count = selectCartCount(state);
+    const title = 'Спасибо за покупку! 🎉';
+    const message = `Вы заказали ${count} шт. (позиций: ${unique}).`;
+
+    // браузерный alert для веба
+    if (Platform.OS === 'web') {
+      window.alert(`${title}\n\n${message}`);
+      clear();
+      return;
+    }
 
     Alert.alert(
-      'Спасибо за покупку! 🎉',
-      `Вы заказали ${count} шт. (позиций: ${unique}).`,
+      title,
+      message,
       [
         {
           text: 'OK',
