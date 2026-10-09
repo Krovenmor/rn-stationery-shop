@@ -2,7 +2,7 @@ import { Alert, FlatList, Pressable, StyleSheet, Text, View } from 'react-native
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
-import { selectCartLines, useCartLines, useCartStore } from '../stores/cartStore';
+import { selectCartCount, selectCartUniqueCount, useCartLineDrugs, useCartStore } from '../stores/cartStore';
 import CartItem from '../components/CartItem';
 import CartSummary from '../components/CartSummary';
 import EmptyState from '../components/EmptyState';
@@ -11,7 +11,7 @@ type Nav = NativeStackNavigationProp<RootStackParamList, 'Cart'>;
 
 export default function CartScreen() {
   const navigation = useNavigation<Nav>();
-  const lines = useCartLines();
+  const lines = useCartLineDrugs();
   const clear = useCartStore((s) => s.clear);
 
   if (lines.length === 0) {
@@ -25,13 +25,13 @@ export default function CartScreen() {
 
   const handleBuy = () => {
     // Читаем актуальное состояние из стора вне React — фишка Zustand
-    const total = useCartStore.getState().lines;
-    const count = Object.values(total).reduce((s, l) => s + l.quantity, 0);
+    const state = useCartStore.getState();
+    const unique = selectCartUniqueCount(state);
+    const count = selectCartCount(state);
 
     Alert.alert(
       'Спасибо за покупку! 🎉',
-      `Вы заказали ${count} тов. на сумму ${Object.values(total)
-        .reduce((s, l) => s + l.product.price * l.quantity, 0)} ₽.`,
+      `Вы заказали ${count} шт. (позиций: ${unique}).`,
       [
         {
           text: 'OK',
@@ -57,7 +57,7 @@ export default function CartScreen() {
     <View style={styles.container}>
       <FlatList
         data={lines}
-        keyExtractor={(l) => l.product.id}
+        keyExtractor={(l) => l.drug.id}
         renderItem={({ item }) => <CartItem line={item} />}
         contentContainerStyle={styles.list}
       />
