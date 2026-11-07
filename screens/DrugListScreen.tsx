@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../types/navigation';
 import { fetchDrugs } from '../api/mockDrugsAPI';
 import { Drug } from '../types/drugs';
-import { RootStackParamList } from '../types/navigation';
 import DrugListItem from '../components/DrugListItem';
 import EmptyState from '../components/EmptyState';
 

@@ -1,20 +1,19 @@
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
-import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../types/navigation';
 import { fetchDrugById } from '../api/mockDrugsAPI';
 import { Drug } from '../types/drugs';
-import { RootStackParamList } from '../types/navigation';
 import DrugDetailsCard from '../components/DrugDetailsCard';
 import EmptyState from '../components/EmptyState';
 import { useCartStore } from '../stores/cartStore';
 
-type RouteT = RouteProp<RootStackParamList, 'DrugDetails'>;
-type Nav = NativeStackNavigationProp<RootStackParamList, 'DrugDetails'>;
-
 export default function DrugDetailsScreen() {
-  const { params } = useRoute<RouteT>();
-  const navigation = useNavigation<Nav>();
+  const { params } = useRoute<RouteProp<RootStackParamList, 'DrugDetails'>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { drugId } = params;
   const add = useCartStore((s) => s.add);
 
   const [drug, setDrug] = useState<Drug | null>(null);
@@ -23,7 +22,7 @@ export default function DrugDetailsScreen() {
   useEffect(() => {
     let alive = true;
     (async () => {
-      const d = await fetchDrugById(params.drugId);
+      const d = await fetchDrugById(drugId);
       if (alive) {
         setDrug(d ?? null);
         setLoading(false);
@@ -32,7 +31,7 @@ export default function DrugDetailsScreen() {
     return () => {
       alive = false;
     };
-  }, [params.drugId]);
+  }, [drugId]);
 
   if (loading) {
     return (

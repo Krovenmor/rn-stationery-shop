@@ -1,16 +1,14 @@
 import { Alert, FlatList, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../types/navigation';
+import type { RootStackParamList } from '../types/navigation';
 import { selectCartCount, selectCartUniqueCount, useCartLineDrugs, useCartStore } from '../stores/cartStore';
 import CartItem from '../components/CartItem';
 import CartSummary from '../components/CartSummary';
 import EmptyState from '../components/EmptyState';
 
-type Nav = NativeStackNavigationProp<RootStackParamList, 'Cart'>;
-
 export default function CartScreen() {
-  const navigation = useNavigation<Nav>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const lines = useCartLineDrugs();
   const clear = useCartStore((s) => s.clear);
 

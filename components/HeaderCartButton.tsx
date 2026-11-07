@@ -1,12 +1,11 @@
 import { Pressable, Text, View, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../types/navigation';
+import type { RootStackParamList } from '../types/navigation';
 import { selectCartCount, useCartStore } from '../stores/cartStore';
 
 export default function HeaderCartButton() {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const count = useCartStore(selectCartCount);
 
   return (
